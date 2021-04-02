@@ -6,7 +6,7 @@ import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import keras.backend as K
-from keras.optimizers import rmsprop, SGD, Adam
+from keras.optimizers import RMSprop, SGD, Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard, ReduceLROnPlateau, TerminateOnNaN
 from experiment.data import load_treatment_and_outcome, load_and_format_covariates
 import numpy as np
@@ -53,9 +53,9 @@ def train_and_predict_dragons(t, y_unscaled, x, targeted_regularization=True, ou
 
         # reproducing the acic experiment
 
-        tf.random.set_random_seed(i)
+        tf.random.set_seed(i)
         np.random.seed(i)
-        train_index, test_index = train_test_split(np.arange(x.shape[0]), test_size=0, random_state=1)
+        train_index, test_index = train_test_split(np.arange(x.shape[0]), random_state=1)
         test_index = train_index
 
         x_train, x_test = x[train_index], x[test_index]
@@ -129,7 +129,7 @@ def train_and_predict_ned(t, y_unscaled, x, targeted_regularization=True, output
         metrics_ned = [ned_loss]
         metrics_cut = [regression_loss]
 
-        tf.random.set_random_seed(i)
+        tf.random.set_seed(i)
         np.random.seed(i)
 
         train_index, test_index = train_test_split(np.arange(x.shape[0]), test_size=0.)
@@ -233,8 +233,12 @@ def run_acic(data_base_dir='../../data/', output_dir='../../dragonnet/',
     simulation_dir = os.path.join(data_base_dir, folder)
 
     simulation_files = sorted(glob.glob("{}/*".format(simulation_dir)))
+    print("READY FOR LOOP")
+    print("covariate_csv : ", covariate_csv)
+    print("simulation dir : ", simulation_dir)
 
     for idx, simulation_file in enumerate(simulation_files):
+        print("Loop : ", idx)
         cf_suffix = "_cf"
         file_extension = ".csv"
         if simulation_file.endswith(cf_suffix + file_extension):
