@@ -5,6 +5,7 @@ import sys
 #sys.path.append("..")
 
 from numpy import load
+from sklearn.metrics import mean_squared_error
 
 # from semi_parametric_estimation.ate import *
 from ate import *
@@ -17,10 +18,7 @@ def load_truth(replication, knob):
 
     file_path = '/Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde/{}/{}/simulation_outputs.npz'.format(knob, replication)
     data = load(file_path)
-    mu_0 = data['t']
-    mu_1 = data['y']
-
-    return mu_0,  mu_1
+    return data['y'].flatten(), data['t'].flatten()
 
 
 def load_data(knob='default', replication=1, model='baseline', train_test='test'):
@@ -57,18 +55,20 @@ def make_table(train_test='train', n_replication=1):
         for model in ['baseline', 'targeted_regularization']:
             simple_errors, tmle_errors = [], []
             for rep in range(n_replication):
-                print(rep)
                 q_t0, q_t1, g, t, y_dragon, index, eps = load_data(knob, rep, model, train_test)
-                a, b = load_truth(rep, knob)
-                mu_1, mu_0 = a[index], b[index]
 
-                truth = (mu_1 - mu_0).mean()
+                truth, treatment = load_truth(rep, knob)
+
+                truth = truth.mean()
 
                 psi_n, psi_tmle, initial_loss, final_loss, g_loss = get_estimate(q_t0, q_t1, g, t, y_dragon, index, eps,
                                                                                  truncate_level=0.01)
 
-                err = abs(truth - psi_n).mean()
-                tmle_err = abs(truth - psi_tmle).mean()
+                print(psi_n)
+                print(truth)
+
+                err = abs(truth - psi_n.mean()).mean()
+                tmle_err = abs(truth - psi_tmle.mean()).mean()
                 simple_errors.append(err)
                 tmle_errors.append(tmle_err)
 
@@ -83,8 +83,8 @@ def main():
     print("The back door adjustment result is below")
     print(dict)
 
-    print("the tmle estimator result is this ")
-    print(tmle_dict)
+    #print("the tmle estimator result is this ")
+    #print(tmle_dict)
 
 
 if __name__ == "__main__":

@@ -248,7 +248,7 @@ def run_lalonde(data_base_dir='/Users/claudiashi/data/ihdp_csv', output_dir='~/r
         t, y = load_all_other_crap(simulation_file)
 
         np.savez_compressed(os.path.join(simulation_output_dir, "simulation_outputs.npz"),
-                            t=t, y=y)
+                            t=t, y=y, x=x)
 
         for is_targeted_regularization in [True, False]:
             print("Is targeted regularization: {}".format(is_targeted_regularization))
