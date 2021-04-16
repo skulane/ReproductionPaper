@@ -36,13 +36,10 @@ Based upon this theory, the authors create the architecture of dragonnet. Here, 
 Dragonnet is evaluated using two datasets: the Infant Health and Development program (IHDP) dataset from 2011 and the Atlantic Causal Inference Conference (ACIC) competition data from 2018.
 
 ### IHDP
-
-
-
-
-
+This dataset was partially given in the existing repository linked to this paper.  This dataset is a synthetic dataset based on the Health and Development program. Which can be generated using the [NPCI R package availabe on github](https://github.com/vdorie/npci). In the paper 1000 replications are used.
 
 ### ACIC
+This data set was part of a competition. The dataset is based on realworld records and is therefore also anonymized. Accec to this data can gotten only after agreeing to several condition, such as respecting the anonymization in the dataset. Both the ACIC dataset and the detailed description of the dataset can be found on the [ACIC 2018 Causal Inference Challenge](https://www.synapse.org/#!Synapse:syn11294478/wiki/).
 
 ## Experiments
 

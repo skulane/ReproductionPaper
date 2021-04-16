@@ -1,9 +1,8 @@
 import copy
-from pathlib import Path
+import os.path as Path
 import sys
-path = str(Path(Path(__file__).parent.absolute()).parent.absolute())
-sys.path.insert(0, path)
-
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from numpy import load
 
 # from semi_parametric_estimation.ate import *
