@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="reproduction-of-dragonnet">Reproduction of Dragonnet</h1>
+<p>Original repository : https://github.com/claudiashi57/dragonnet<br />Original Paper : https://arxiv.org/pdf/1906.02120.pdf</p>
+<p>In this project, we aim to reproduce results shown in the paper <a href="https://arxiv.org/pdf/1906.02120.pdf">'Adapting Neural Networks for the Estimation of Treatment effects' by Shi et al</a>. In this paper, the authors infer treatment outcomes from observational data. To do this, they use a neural network called <a href="https://github.com/claudiashi57/dragonnet">dragonnet</a>.</p>
+<h2 id="dragonnet">Dragonnet</h2>
+<p>Dragonnet aims to perform causal inference using neural networks. <strong>Causal inference</strong> involves answering causal questions. An example of a causal question is &quot;<em>Will I pass the course, given that I hand in this blog?</em>&quot;. This is a question about <strong>prediction</strong>. We can also ask questions about <strong>intervention</strong>: &quot;<em>If I hand in this blog, will I pass the course?</em>&quot;. In these questions, the <strong>dependent</strong> variable is the passing of the course and the <strong>independent</strong> variable is the handing in of the blog. With these kinds of questions, we have to be careful about confounding data. <strong>Confounding</strong> data is data that influences our dependent and independent variable. In observational data, we have to be aware that we may be dealing with such confounding data.</p>
+<p>The neural network is aimed at predicting <strong>treatment effects</strong>. We ask the question &quot;<em>What is the expected effect of intervening by assigning a treatment?</em>&quot;. We refer to the <strong>treatment</strong> as <span class="math"><em>T</em></span>, the <strong>outcome</strong> as <span class="math"><em>Y</em></span> and <strong>covariates</strong> as <span class="math"><em>X</em></span>. These covariates may influence both the treatment as well as the outcome. The <strong>expected outcome</strong> can be defined as follows:</p>
+<p><br /><span class="math"><em>Q</em>(<em>t</em>, <em>x</em>) = E[<em>Y</em>∣<em>t</em>, <em>x</em>]</span><br /></p>
+<p>The authors also use a propensity score. A <strong>propensity score</strong> denotes the probability that someone is assigned a certain treatment given the covariates. These propensity scores may then be used to reduce bias by performing propensity score weighting. The formula for propensity score is the following:</p>
+<p><br /><span class="math"><em>g</em>(<em>x</em>) = <em>P</em>(<em>T</em> = 1∣<em>x</em>)</span><br /></p>
+<p>Lastly, the authors of the paper describe the <strong>Average Treatment Effect</strong> (ATE) with the following formula:</p>
+<p><br /><span class="math"><em>ψ</em> = E[E[<em>Y</em>∣<em>T</em> = 1, <em>X</em>] − E[<em>Y</em>∣<em>T</em> = 0, <em>X</em>]]</span><br /></p>
+<p>The dragonnet network aims to model <span class="math"><em>Q</em></span> as well as <span class="math"><em>g</em></span>. This is done by using a <strong>three-headed architecture</strong>. To make sure that the estimation of <span class="math"><em>ψ</em></span> is good enough, they use <strong>targeted regularization</strong>. This is a regularization procedure that is based on non-parametric estimation theory.</p>
+<p>The authors use a theorem by Rosenbaum and Rubin (1983) and determine that &quot;if the average treatment effect <span class="math"><em>ψ</em></span> is identifiable from observational data by adjusting for <span class="math"><em>X</em></span>, then adjusting for the propensity score also suffices&quot;. This can be written as follows:</p>
+<p><br /><span class="math">$$\text{If } \mathbb{E}[\mathbb{E}[Y | T=1, X] - \mathbb{E}[Y | T=0, X]]\text{, then } \spi \mathbb{E}[\mathbb{E}[Y | T=1, g(X)] = \mathbb{E}[Y | T=0, g(X)]]$$</span><br /></p>
+<p>Based upon this theory, the authors create the architecture of dragonnet. Here, they estimate <span class="math"><em>Q̂</em>(<em>t</em>, <em>x</em>)</span>:</p>
+<div class="figure">
+<img src="assets/README-6be6d88c.png" />
+</div>
+<h2 id="datasets">Datasets</h2>
+<p>Dragonnet is evaluated using two datasets: the Infant Health and Development program (IHDP) dataset from 2011 and the Atlantic Causal Inference Conference (ACIC) competition data from 2018.</p>
+<h3 id="ihdp">IHDP</h3>
+<h3 id="acic">ACIC</h3>
+<h2 id="experiments">Experiments</h2>
+<p>We aim to replicate the results for both of thes above described datasets. This entails replicating two tables.</p>
+<p>The first table is shown below. This table shows results for the IHDP dataset. It shows the mean absolute error and standard error across simulations. The training and validation data are denoted with <span class="math"><em>δ</em><sub>in</sub></span>, the test data (heldout data) is denoted with <span class="math"><em>δ</em><sub>out</sub></span> and these two combined is denoted with <span class="math"><em>δ</em><sub>all</sub></span>.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Method</th>
+<th align="left"><span class="math"><em>δ</em><sub>in</sub></span></th>
+<th align="left"><span class="math"><em>δ</em><sub>out</sub></span></th>
+<th align="left"><span class="math"><em>δ</em><sub>all</sub></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">baseline (TARNET)</td>
+<td align="left">0.16 <span class="math"> ± </span> .01</td>
+<td align="left">0.21 <span class="math"> ± </span> .01</td>
+<td align="left">0.13 <span class="math"> ± </span> .00</td>
+</tr>
+<tr class="even">
+<td align="left">baseline + t-reg</td>
+<td align="left">0.15 <span class="math"> ± </span> .01</td>
+<td align="left">0.20 <span class="math"> ± </span> .01</td>
+<td align="left">0.12 <span class="math"> ± </span> .00</td>
+</tr>
+<tr class="odd">
+<td align="left">Dragonnet</td>
+<td align="left">0.14 <span class="math"> ± </span> .01</td>
+<td align="left">0.21 <span class="math"> ± </span> .01</td>
+<td align="left">0.12 <span class="math"> ± </span> .00</td>
+</tr>
+<tr class="even">
+<td align="left">Dragonnet + t-reg</td>
+<td align="left">0.14 <span class="math"> ± </span> .01</td>
+<td align="left">0.20 <span class="math"> ± </span> .01</td>
+<td align="left">0.11 <span class="math"> ± </span> .00</td>
+</tr>
+</tbody>
+</table>
+<p>The second table is shown below. This table shows results for the ACIC 2018 dataset.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Method</th>
+<th align="left"><span class="math"><em>δ</em><sub>all</sub></span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">baseline (TARNET)</td>
+<td align="left">1.45</td>
+</tr>
+<tr class="even">
+<td align="left">baseline + t-reg</td>
+<td align="left">1.40</td>
+</tr>
+<tr class="odd">
+<td align="left">Dragonnet</td>
+<td align="left">0.55</td>
+</tr>
+<tr class="even">
+<td align="left">Dragonnet + t-reg</td>
+<td align="left">0.35</td>
+</tr>
+</tbody>
+</table>
+<h3 id="reproduction">Reproduction</h3>
+<p>We run our experiments on Google Cloud.</p>
+<h3 id="lalonde-dataset">Lalonde dataset</h3>
+<p>In addition to reproduction the results from the paper, we wanted to see whether dragonnet can perform well on datasets in different domains. To do this, we use the <a href="http://sekhon.berkeley.edu/matching/lalonde.html">lalonde dataset</a>. This dataset was originally used to evaluate propensity score matching. It contains 445 observations and 12 variables. These variables are the following:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Variable</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>age</code></td>
+<td align="left">Age in years</td>
+</tr>
+<tr class="even">
+<td align="left"><code>edu</code></td>
+<td align="left">Years of schooling</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>black</code></td>
+<td align="left">Indicator variable for blacks</td>
+</tr>
+<tr class="even">
+<td align="left"><code>hisp</code></td>
+<td align="left">Indicator variable for hispanics</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>married</code></td>
+<td align="left">Indicator variable for marital status</td>
+</tr>
+<tr class="even">
+<td align="left"><code>nodegr</code></td>
+<td align="left">Indicator variable for high school diploma</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>re74</code></td>
+<td align="left">Real earnings in 1974</td>
+</tr>
+<tr class="even">
+<td align="left"><code>re75</code></td>
+<td align="left">Real earnings in 1975</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>re78</code></td>
+<td align="left">Real earnings in 1978</td>
+</tr>
+<tr class="even">
+<td align="left"><code>u74</code></td>
+<td align="left">Indicator variable for earnings in 1974 being zero</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>u75</code></td>
+<td align="left">Indicator variable for earnings in 1975 being zero</td>
+</tr>
+<tr class="even">
+<td align="left"><code>treat</code></td>
+<td align="left">An indicator variable for treatment status</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
