@@ -1,0 +1,47 @@
+dragonnet
+Value knob :  dragonnet
+Database dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/data/lalonde
+Result dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde
+[knob]Value knob :  dragonnet
+[knob]Database dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/data/lalonde
+[knob]Result dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde
+[knob]otput_dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde/dragonnet
+the dragon is dragonnet
+data loaded
+Is targeted regularization: True
+I am here making dragonnet
+2021-04-15 13:27:41.481039: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-04-15 13:27:41.487847: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-04-15 13:27:41.872085: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+***************************** elapsed_time is:  13.351631879806519
+average propensity for treated: 0.3552992641925812 and untreated: 0.29624122381210327
+average propensity for treated: 0.3552992641925812 and untreated: 0.29624122381210327
+Is targeted regularization: False
+I am here making dragonnet
+***************************** elapsed_time is:  11.035684823989868
+average propensity for treated: 0.3628978729248047 and untreated: 0.29123637080192566
+average propensity for treated: 0.3628978729248047 and untreated: 0.29123637080192566
+tarnet
+Value knob :  tarnet
+Database dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/data/lalonde
+Result dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde
+[knob]Value knob :  tarnet
+[knob]Database dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/data/lalonde
+[knob]Result dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde
+[knob]otput_dir :  /Users/jessie/OneDrive/Documents/MSc/Q3/DL/ReprodcutionPaper/output/lalonde/tarnet
+the dragon is tarnet
+data loaded
+Is targeted regularization: True
+2021-04-15 13:28:13.510797: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-04-15 13:28:13.511129: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2021-04-15 13:28:13.834103: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+Batch 1: Invalid loss, terminating training
+***************************** elapsed_time is:  6.811830997467041
+average propensity for treated: nan and untreated: nan
+average propensity for treated: nan and untreated: nan
+Is targeted regularization: False
+***************************** elapsed_time is:  7.2958221435546875
+average propensity for treated: 5.5659688769083004e-06 and untreated: 5.732076260756003e-06
+average propensity for treated: 5.5659688769083004e-06 and untreated: 5.732076260756003e-06

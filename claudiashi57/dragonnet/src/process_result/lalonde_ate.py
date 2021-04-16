@@ -67,8 +67,8 @@ def make_table(train_test='train', n_replication=1):
                 print(psi_n)
                 print(truth)
 
-                err = abs(truth - psi_n.mean()).mean()
-                tmle_err = abs(truth - psi_tmle.mean()).mean()
+                err = abs(truth - psi_n).mean()
+                tmle_err = abs(truth - psi_tmle).mean()
                 simple_errors.append(err)
                 tmle_errors.append(tmle_err)
 
