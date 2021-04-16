@@ -1,1 +1,1 @@
-Our blog is here:
+For the Deep Learning reproduction project, we have written a blog about the paper '[Adapting Neural Networks for the Estimation of Treatment effects' by Shi et al](https://arxiv.org/pdf/1906.02120.pdf). This blog can be found [here](https://skulane.github.io/ReprodcutionPaper/). 
