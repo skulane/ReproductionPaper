@@ -1,11 +1,15 @@
-from semi_parametric_estimation.ate import *
 from numpy import load
 import pandas as pd
 import numpy as np
 import copy
 import glob
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
+# print(sys.path)
+
+from semi_parametric_estimation.ate import *
 
 def load_truth(file_path='~/data/small_sweep/params.csv',
                ufid='00ea30e866f141d9880d5824a361a76a'):
@@ -48,7 +52,7 @@ def get_estimate(q_t0, q_t1, g, t, y_dragon, truncate_level=0.01):
     return psi_n, psi_tmle, initial_loss, final_loss, g_loss
 
 
-def make_table(file_path='../../../dragonnet/result/acic'):
+def make_table(file_path='dragonnet/AcicResult'):
     dict = {'tarnet': {'baseline': {'back_door': 0, }, 'targeted_regularization': 0},
             'dragonnet': {'baseline': 0, 'targeted_regularization': 0},
             'nednet': {'baseline': 0, 'targeted_regularization': 0}}
@@ -84,7 +88,6 @@ def make_table(file_path='../../../dragonnet/result/acic'):
 
             dict[knob][model] = ufid_simple.mean()
             tmle_dict[knob][model] = ufid_tmle.mean()
-
     return dict, tmle_dict
 
 
