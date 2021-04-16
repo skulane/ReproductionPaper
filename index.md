@@ -74,7 +74,7 @@ The first task was to produce tables using the smaller but already provided data
 the tmle estimator result is this 
 {'tarnet': {'baseline': 0.14394802299946963, 'targeted_regularization': 0.1574912292756635}, 'dragonnet': {'baseline': 0.17765864595033992, 'targeted_regularization': 0.18212513156817756}, 'nednet': {'baseline': 0, 'targeted_regularization': 0}}
 ```
-Translated to table it looks like this.
+Translated to a table it looks like this.
 | Method | $\delta_{\text{all}}$ |
 |--------| ----------------------|
 | baseline (TARNET) | 0.164  |
@@ -102,3 +102,25 @@ In addition to reproduction the results from the paper, we wanted to see whether
 | `u74`    | Indicator variable for earnings in 1974 being zero |
 | `u75`    | Indicator variable for earnings in 1975 being zero |
 | `treat`  | An indicator variable for treatment status |
+
+
+## Difficulties
+
+During our attempt to reproduce the results using the same datasets in the paper we came across several challenges. 
+
+The first problem relates to the existing codebase. Unfortunately, the original code did not include comments that could help to understand the code better. This meant that it was on a trial and error basis to find out what part of the code was responsible for what.  
+
+The second challenge was with google cloud. During one of our experiments of running a dataset we suddenly unable to access our VM instance. This made checking the progress impossible and cost us days. In fact, we had to terminate a running instance since we had no access to it. To our surprise, while it was running for 4-5 days, it was still not finished with running. This prompted us to use a more powerful machine type which then run for 5 days and stopped. Unfortunately, the same problem of access during running happened to us again. After it did stop running, which we found out by looking at CPU usage in google cloud, we restarted the instance to look at the result. When we opened the log file of the run we were confronted with the following message.
+```
+OSError: [Errno 28] No space left on device
+Batch 0: Invalid loss, terminating training
+Batch 0: Invalid loss, terminating training
+***************************** elapsed_time is:  5.725270509719849
+average propensity for treated: nan and untreated: nan
+average propensity for treated: nan and untreated: nan
+```
+
+As you can see it did not finish running, there was no room left on the VM instance. To be clear there were more than 15GB of free space left on the disk before we ran the experiment on the ACIC dataset. Unfortunately, we ran out of time to rerun it again with a lot more memory. This is worrisome since we still have no indication of how much longer it would have taken and how much more space is required.
+
+The third and biggest hurdle was the datasets used in this paper. Let's start with the IHDP dataset. We found a small set of 50 replications as an example in the original repository, which we used to get the code working with our modifications. However to reproduce we need 1000 replications. We, therefore, went to the [NPCI repository](https://github.com/vdorie/npci) to try and generate the needed dataset. First, the scripts required several parameters to be set. Parameters we did not know and could not find in the paper. Only the `overlap` (no overlap) and `setting` (B) values were available in the paper. While we did get the script to run, it took an insanely long time to produce a single replication, at that rate it would have taken us 25 days, which we did not have. 
+So we moved on to the other dataset ACIC. Luckily this dataset was available, albeit under conditions. We had to accept several conditions including not publishing the dataset, so if you want access to the data set use the link we provided earlier to gain access. To our surprise, we managed to find several versions of the dataset. However, we used the one that was directly linked in the original repository and it worked. Once we wanted to generate the tables we were surprised. In the code base, there was a file required called `params.csv`. One we did not have in our version of the dataset. We did find it in several other versions of the dataset, but they were not compatible with the dataset we had run.
