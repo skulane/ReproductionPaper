@@ -76,6 +76,7 @@ the tmle estimator result is this
 {'tarnet': {'baseline': 0.14394802299946963, 'targeted_regularization': 0.1574912292756635}, 'dragonnet': {'baseline': 0.17765864595033992, 'targeted_regularization': 0.18212513156817756}, 'nednet': {'baseline': 0, 'targeted_regularization': 0}}
 ```
 Translated to a table it looks like this.
+
 | Method | $\delta_{\text{all}}$ |
 |--------| ----------------------|
 | baseline (TARNET) | 0.164  |
