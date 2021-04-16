@@ -30,7 +30,7 @@ def _split_output(yt_hat, t, y, y_scaler, x, index):
 
 
 def train_and_predict_dragons(t, y_unscaled, x, targeted_regularization=True, output_dir='',
-                              knob_loss=dragonnet_loss_binarycross, ratio=1., dragon='', val_split=0.2, batch_size=64):
+                              knob_loss=dragonnet_loss_binarycross, ratio=1., dragon='', val_split=0.42, batch_size=64):
     verbose = 0
     y_scaler = StandardScaler().fit(y_unscaled)
     y = y_scaler.transform(y_unscaled)
@@ -57,8 +57,9 @@ def train_and_predict_dragons(t, y_unscaled, x, targeted_regularization=True, ou
     tf.random.set_seed(i)
     np.random.seed(i)
     # print()
-    train_index, test_index = train_test_split(np.arange(x.shape[0]), random_state=1)
+    train_index, test_index = train_test_split(np.arange(x.shape[0]), test_size=0.1, random_state=1)
     test_index = train_index
+    val_split = val_split/len(train_index)
 
     x_train, x_test = x[train_index], x[test_index]
     y_train, y_test = y[train_index], y[test_index]
@@ -257,14 +258,14 @@ def run_lalonde(data_base_dir='/Users/claudiashi/data/ihdp_csv', output_dir='~/r
                                                                    targeted_regularization=is_targeted_regularization,
                                                                    output_dir=simulation_output_dir,
                                                                    knob_loss=knob_loss, ratio=ratio, dragon=dragon,
-                                                                   val_split=0.2, batch_size=64)
+                                                                   val_split=0., batch_size=64)
             else:
 
                 test_outputs, train_output = train_and_predict_dragons(t, y, x,
                                                                        targeted_regularization=is_targeted_regularization,
                                                                        output_dir=simulation_output_dir,
                                                                        knob_loss=knob_loss, ratio=ratio, dragon=dragon,
-                                                                       val_split=0.2, batch_size=64)
+                                                                       val_split=0.27, batch_size=64)
 
             if is_targeted_regularization:
                 train_output_dir = os.path.join(simulation_output_dir, "targeted_regularization")

@@ -1,8 +1,5 @@
 # Reproduction of Dragonnet
 
-Original repository :  https://github.com/claudiashi57/dragonnet \
-Original Paper  : https://arxiv.org/pdf/1906.02120.pdf
-
 In this project, we aim to reproduce results shown in the paper ['Adapting Neural Networks for the Estimation of Treatment effects' by Shi et al](https://arxiv.org/pdf/1906.02120.pdf). In this paper, the authors infer treatment outcomes from observational data. To do this, they use a neural network called [dragonnet](https://github.com/claudiashi57/dragonnet).
 
 ## Dragonnet
@@ -48,7 +45,7 @@ Dragonnet is evaluated using two datasets: the Infant Health and Development pro
 
 We aim to replicate the results for both of thes above described datasets. This entails replicating two tables.
 
-The first table is shown below. This table shows results for the IHDP dataset. It shows the mean absolute error and standard error across simulations. The training and validation data are denoted with $\delta_{\text{in}}$, the test data (heldout data) is denoted with $\delta_{\text{out}}$ and these two combined is denoted with $\delta_{\text{all}}$.
+The first table is shown below. This table shows results for the IHDP dataset. It shows the mean absolute error (MAE) and standard error across simulations. The training and validation data are denoted with $\delta_{\text{in}}$, the test data (heldout data) is denoted with $\delta_{\text{out}}$ and these two combined is denoted with $\delta_{\text{all}}$.
 
 | Method | $\delta_{\text{in}}$ | $\delta_{\text{out}}$ | $\delta_{\text{all}}$ |
 |--------| ---------------------|------------------------|----------------------|
@@ -57,7 +54,7 @@ The first table is shown below. This table shows results for the IHDP dataset. I
 | Dragonnet         | 0.14 $\pm$ .01  | 0.21 $\pm$ .01  | 0.12 $\pm$ .00 |
 | Dragonnet + t-reg | 0.14 $\pm$ .01  | 0.20 $\pm$ .01  | 0.11 $\pm$ .00 |
 
-The second table is shown below. This table shows results for the ACIC 2018 dataset.
+The second table is shown below. This table shows results for the ACIC 2018 dataset. Here, the error is the MAE of the average treatment effect estimate.
 
 | Method | $\delta_{\text{all}}$ |
 |--------| ----------------------|
@@ -72,19 +69,23 @@ We run our experiments on Google Cloud.
 
 ### Lalonde dataset
 
-In addition to reproduction the results from the paper, we wanted to see whether dragonnet can perform well on datasets in different domains. To do this, we use the [lalonde dataset](http://sekhon.berkeley.edu/matching/lalonde.html). This dataset was originally used to evaluate propensity score matching. It contains 445 observations and 12 variables. These variables are the following:
+In addition to reproduction the results from the paper, we wanted to see whether dragonnet can perform well on datasets in different domains. To do this, we use the [lalonde dataset](http://sekhon.berkeley.edu/matching/lalonde.html). This dataset was originally used to evaluate propensity score matching. It was collected for a study which investigated the effectiveness of a job training program done in 1974 on the real earnings of a person in 1978.
 
-| Variable | Description |
-|----------|-------------|
-| `age`    | Age in years |
-| `edu`    | Years of schooling
-| `black`  | Indicator variable for blacks |
-| `hisp`   | Indicator variable for hispanics |
-| `married`| Indicator variable for marital status |
-| `nodegr` | Indicator variable for high school diploma |
-| `re74`   | Real earnings in 1974 |
-| `re75`   | Real earnings in 1975 |
-| `re78`   | Real earnings in 1978 |
-| `u74`    | Indicator variable for earnings in 1974 being zero |
-| `u75`    | Indicator variable for earnings in 1975 being zero |
-| `treat`  | An indicator variable for treatment status |
+It contains 614 observations and 12 variables. From these variables we choose to use two continuous variables (`age` and `edu`) and four binary variables (`black`, `hisp`, `married` and `nodegr`) as covariates $X$, the binary variable (`treat`) as treatment $T$ and the continuous variable (`re78`) as outcome $Y$. We have created a summary of the variables we use in the table below. The statistics that are shown were created by Romain Guion in [this notebook](https://rugg2.github.io/Lalonde%20dataset%20-%20Causal%20Inference.html).
+
+| Variable | Description | Mean | Standard deviation |
+|----------|-------------|------|--------------------|
+| `age`    | Age in years | 27.4 | 9.9 |
+| `edu`    | Years of schooling | 10.3 | 2.6 |
+| `black`  | Indicator variable for blacks | 0.4 | 0.5 |
+| `hisp`   | Indicator variable for hispanics | 0.1 | 0.3 |
+| `married`| Indicator variable for marital status | 0.4 | 0.5 |
+| `nodegr` | Indicator variable for high school diploma | 0.6 | 0.5 |
+| `re78`   | Real earnings in 1978 | 6792.8 | 7470.7 |
+| `treat`  | An indicator variable for treatment status | 0.3 | 0.5 |
+
+To create dragonnet for this dataset, we created the script [`run_lalonde.sh`](https://github.com/skulane/ReprodcutionPaper/blob/main/claudiashi57/dragonnet/src/experiment/run_lalonde.sh) in the original dragonnet repository. We also created the scripts [`lalonde_data.py`](https://github.com/skulane/ReprodcutionPaper/blob/main/claudiashi57/dragonnet/src/experiment/lalonde_data.py) to process the lalonde dataset and [`lalonde_main.py`](https://github.com/skulane/ReprodcutionPaper/blob/main/claudiashi57/dragonnet/src/experiment/lalonde_main.py) to create the models. After the models have been created, the results can be processed using the last script we created, [`lalonde_ate.py`](https://github.com/skulane/ReprodcutionPaper/blob/main/claudiashi57/dragonnet/src/process_result/lalonde_ate.py). These scripts are based off the scripts written for the IHDP data. However, as explained previously, we struggled understanding the IHDP data and how it is handled in the dragonnet repository. After much searching, we found out the purpose of the variables which in the code are referred to as `mu_0`, `mu_1` and `y_cf`. While `y_cf` records counterfactual outcomes and does not seem to be necessary to reproduce the results, we found out that `mu_0` and `mu_1` are the treated and control conditional means which are used to calculate the scores. Since the lalonde dataset is not a synthetic dataset, it does not contain these conditional means. Thus, the method of calculating the ATE score as for the IHDP data does not work for the lalonde dataset.
+
+We decided to take a look at how the ATE score is calculated for the ACIC dataset. Here, no conditional means are used. Instead, only what is referred to as the 'ground truth' is used. From reading the code, we understand that this ground truth is supposed to be the effect size. For the ACIC dataset the effect size is recorded in some file called `params.csv`. There is nu such file for the lalonde dataset. Therefore, we resort to calculating the effect size ourselves. We assume that the effect size recorded for ACIC is the Cohen's d. This metric is the difference between two means divided by the standard deviation of the data. The two means are the means of on the one hand the data entries for which there was no treatment and on the other hand the data entries for which there was a treatment.
+
+Now that we had written all of the code to create and evaluate dragonnet for the lalonde dataset, we were able to obtain our results. We found that the dragonnet with targeted regularization had an absolute error of 0.1996 for a test set of 33% of the data. Because the source code was unclear to us, we unfortunately were not able to use the 63/27/10 split used by the authors. Recall that this error is the same metric as the one used for the ACIC data, so it is the MAE of the average treatment effect estimate. To determine whether this result is good, we have to compare it to the results of other models. We found an [paper by Tobias Hatt and Stefan Feuerriegel](https://arxiv.org/pdf/2101.08490.pdf). In this paper, the authors compare their newly proposed model against many other methods. Keeping in mind that our train/test/validation split is slightly different from the one used in this paper, our model performs worse than each of these methods, but it's performance is close to some. At this point, we notice that they also use the lalonde dataset in combination with dragonnet to estimate ATE. Their performance is a lot better than our reproduced result. We think it is highly likely that our train/test/split and the way we combined the scripts for IHDP and ACIC is the reason for these varying results.
