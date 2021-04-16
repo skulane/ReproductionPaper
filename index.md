@@ -74,9 +74,15 @@ The first task was to produce tables using the smaller but already provided data
 the tmle estimator result is this 
 {'tarnet': {'baseline': 0.14394802299946963, 'targeted_regularization': 0.1574912292756635}, 'dragonnet': {'baseline': 0.17765864595033992, 'targeted_regularization': 0.18212513156817756}, 'nednet': {'baseline': 0, 'targeted_regularization': 0}}
 ```
+Translated to table it looks like this.
+| Method | $\delta_{\text{all}}$ |
+|--------| ----------------------|
+| baseline (TARNET) | 0.164  |
+| baseline + t-reg  | 0.157  |
+| Dragonnet         |0.149 |
+| Dragonnet + t-reg | 0.155  |
 
-
-We run our experiments first locally and then on Google Cloud. We have made use of two types of VM instances. Both run on ubunutu 20.04 lts. Initially we ran our experiments on machine type e2-medium (2 vCPUs, 4 GB memory). Eventually we had switched to a more powerefull machine type c2-standard-4 (4 vCPUs, 16 GB memory). 
+We run our experiments first locally and then on Google Cloud. We have made use of two types of VM instances. Both using ubunutu 20.04 lts as its operating system. Initially we ran our experiments on machine type e2-medium (2 vCPUs, 4 GB memory). Eventually we had switched to a more powerefull machine type c2-standard-4 (4 vCPUs, 16 GB memory). 
 
 ### Lalonde dataset
 
