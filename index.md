@@ -65,7 +65,18 @@ The second table is shown below. This table shows results for the ACIC 2018 data
 
 ### Reproduction
 
-We run our experiments on Google Cloud.
+As the basis of our reproduction, we used the existing codebase for this paper. Since the codebase includes deprecated functions and old versions of python modules, we first upgraded the codebase to be compatible with newer module versions. This took some time as the method of finding old python code was to fix every single error we encountered when we ran the codebase. Eventually, we got the code working with the new versions of the modules. We upgraded the parts of the codebase necessary to run the experiments described in the original repository. The resulting codebase of this can be found on our [repository](https://github.com/skulane/ReprodcutionPaper). With our modification to the code base working and running as it should, we focussed on reproducing the tables that are shown above.
+
+The first task was to produce tables using the smaller but already provided dataset of IHDP consisting of 50 replications. This gave us the following result.
+
+```
+{'tarnet': {'baseline': 0.16446090670469127, 'targeted_regularization': 0.15715158759816783}, 'dragonnet': {'baseline': 0.14885343353712469, 'targeted_regularization': 0.15495526943678933}, 'nednet': {'baseline': 0, 'targeted_regularization': 0}}
+the tmle estimator result is this 
+{'tarnet': {'baseline': 0.14394802299946963, 'targeted_regularization': 0.1574912292756635}, 'dragonnet': {'baseline': 0.17765864595033992, 'targeted_regularization': 0.18212513156817756}, 'nednet': {'baseline': 0, 'targeted_regularization': 0}}
+```
+
+
+We run our experiments first locally and then on Google Cloud. We have made use of two types of VM instances. Both run on ubunutu 20.04 lts. Initially we ran our experiments on machine type e2-medium (2 vCPUs, 4 GB memory). Eventually we had switched to a more powerefull machine type c2-standard-4 (4 vCPUs, 16 GB memory). 
 
 ### Lalonde dataset
 
